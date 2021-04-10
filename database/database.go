@@ -5,22 +5,14 @@ package database
 
 import (
 	"context"
-	"fmt"
 	"time"
 
 	"github.com/jacekolszak/deebee-loans/service"
-	"github.com/jacekolszak/deebee/codec"
-	"github.com/jacekolszak/deebee/json"
 	"github.com/jacekolszak/deebee/store"
 	"github.com/sirupsen/logrus"
 )
 
-func StartLoans(ctx context.Context) (loans *SynchronizedLoans, done <-chan struct{}, err error) {
-	s, err := store.Open("/tmp/loans")
-	if err != nil {
-		return nil, nil, fmt.Errorf("error opening DeeBee store: %w", err)
-	}
-
+func StartLoans(ctx context.Context, s Store) (loans *SynchronizedLoans, done <-chan struct{}, err error) {
 	loans, err = loadState(s)
 	if err != nil {
 		return nil, nil, err
@@ -44,9 +36,14 @@ func StartLoans(ctx context.Context) (loans *SynchronizedLoans, done <-chan stru
 	return loans, doneCh, nil
 }
 
-func loadState(s *store.Store) (*SynchronizedLoans, error) {
+type Store interface {
+	ReadLatest(out *service.Snapshot) (store.Version, error)
+	Write(in *service.Snapshot, options ...store.WriterOption) error
+}
+
+func loadState(s Store) (*SynchronizedLoans, error) {
 	snapshot := service.Snapshot{}
-	_, err := codec.ReadLatest(s, json.Decoder(&snapshot))
+	_, err := s.ReadLatest(&snapshot)
 	if err != nil && !store.IsVersionNotFound(err) {
 		return nil, err
 	}
@@ -57,10 +54,10 @@ func loadState(s *store.Store) (*SynchronizedLoans, error) {
 	}, nil
 }
 
-func saveState(loans *SynchronizedLoans, s *store.Store) {
+func saveState(loans *SynchronizedLoans, s Store) {
 	logrus.Info("Saving loans.Service state")
 	snapshot := loans.Snapshot()
-	if err := json.Write(s, snapshot); err != nil {
+	if err := s.Write(&snapshot); err != nil {
 		logrus.WithError(err).Error("error saving state")
 	}
 }
