@@ -17,7 +17,7 @@ only on those topics related to storing application state.
 
 ## Web API
 
-### Take Loan
+### Take a Loan
 
 ```shell
 curl "http://localhost:8080/take?user=john&amount=1600&term=30"
