@@ -8,6 +8,8 @@ using DeeBee store.
 
 When application is starting, state is restored and loaded again into memory.
 
+The state is also replicated once per hour to a second directory (which can be an NFS file system).
+
 ## Disclaimer
 
 Please note that application is lacking in multiple areas: security, input validation, testing etc. I wanted to focus
