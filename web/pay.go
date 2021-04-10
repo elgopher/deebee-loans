@@ -34,5 +34,6 @@ func (h payLoan) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
 		return
 	}
 
+	logrus.Info("Loan paid off")
 	_, _ = fmt.Fprintln(writer, "Amount remaining:", activeLoan.AmountRemaining)
 }
