@@ -53,7 +53,7 @@ func openStore(ctx context.Context, mainDir, backupDir string) *replicatedJsonSt
 	}
 	backupStore, err := store.Open(backupDir)
 	if err != nil {
-		logrus.WithError(err).Error("error opening DeeBee backup store") // continue even though backupStore cannot be open
+		logrus.WithError(err).Fatal("error opening DeeBee backup store")
 	}
 
 	go func() {
