@@ -32,7 +32,7 @@ func (l *Loans) Snapshot() Snapshot {
 		Loans: map[string]loan.Snapshot{},
 	}
 	for userID, activeLoan := range l.activeLoansByUser {
-		snapshot.Loans[string(userID)] = activeLoan.Snapshot()
+		snapshot.Loans[userID] = activeLoan.Snapshot()
 	}
 	return snapshot
 }
