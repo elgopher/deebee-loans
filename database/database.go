@@ -15,7 +15,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-func Start(ctx context.Context) (loans *service.Loans, done <-chan struct{}, err error) {
+func StartLoans(ctx context.Context) (loans *service.Loans, done <-chan struct{}, err error) {
 	s, err := store.Open("/tmp/loans")
 	if err != nil {
 		return nil, nil, fmt.Errorf("error opening DeeBee store: %w", err)

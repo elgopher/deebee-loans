@@ -18,7 +18,7 @@ func main() {
 	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt, os.Kill)
 	defer cancel()
 
-	loans, done, err := database.Start(ctx)
+	loans, done, err := database.StartLoans(ctx)
 	if err != nil {
 		logrus.WithError(err).Fatal()
 	}
