@@ -16,14 +16,9 @@ type payLoan struct {
 }
 
 func (h payLoan) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
-	if err := request.ParseForm(); err != nil {
-		writeClientError(writer, err)
-		return
-	}
-
 	var (
-		userID    = request.Form.Get("user")
-		amount, _ = strconv.Atoi(request.Form.Get("amount"))
+		userID    = request.FormValue("user")
+		amount, _ = strconv.Atoi(request.FormValue("amount"))
 	)
 
 	err := h.loans.PayLoan(userID, amount)

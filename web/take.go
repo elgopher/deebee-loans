@@ -13,15 +13,10 @@ type takeLoan struct {
 }
 
 func (h takeLoan) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
-	if err := request.ParseForm(); err != nil {
-		writeClientError(writer, err)
-		return
-	}
-
 	var (
-		userID    = request.Form.Get("user")
-		term, _   = strconv.Atoi(request.Form.Get("term"))
-		amount, _ = strconv.Atoi(request.Form.Get("amount"))
+		userID    = request.FormValue("user")
+		term, _   = strconv.Atoi(request.FormValue("term"))
+		amount, _ = strconv.Atoi(request.FormValue("amount"))
 	)
 	err := h.loans.TakeLoan(userID, term, amount)
 	if err != nil {
