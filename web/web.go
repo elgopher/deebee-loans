@@ -12,12 +12,6 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-type Loans interface {
-	TakeLoan(userID string, amount, term int) error
-	PayLoan(userID string, amount int) error
-	GetActiveLoan(userID string) (service.ActiveLoan, error)
-}
-
 func ListenAndServe(ctx context.Context, loans Loans) error {
 	mux := http.NewServeMux()
 	mux.Handle("/take", takeLoan{loans: loans})
@@ -42,7 +36,13 @@ func ListenAndServe(ctx context.Context, loans Loans) error {
 	return server.ListenAndServe()
 }
 
-func writeClientError(writer http.ResponseWriter, o ... interface{}) {
+type Loans interface {
+	TakeLoan(userID string, amount, term int) error
+	PayLoan(userID string, amount int) error
+	GetActiveLoan(userID string) (service.ActiveLoan, error)
+}
+
+func writeClientError(writer http.ResponseWriter, o ...interface{}) {
 	writer.WriteHeader(400)
 	_, _ = fmt.Fprintln(writer, o...)
 }
