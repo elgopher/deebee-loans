@@ -25,16 +25,19 @@ func (h payLoan) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
 		userID    = request.Form.Get("user")
 		amount, _ = strconv.Atoi(request.Form.Get("amount"))
 	)
+
 	err := h.loans.PayLoan(userID, amount)
 	if err != nil {
 		writeClientError(writer, err)
 		return
 	}
+
 	activeLoan, err := h.loans.GetActiveLoan(userID)
 	if err != nil {
 		writer.WriteHeader(500)
 		logrus.WithError(err).Error("error getting active loan")
 		return
 	}
+
 	_, _ = fmt.Fprintln(writer, "Amount remaining:", activeLoan.AmountRemaining)
 }
