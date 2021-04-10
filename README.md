@@ -8,6 +8,8 @@ using DeeBee store.
 
 When application is starting, state is restored and loaded again into memory.
 
+## Disclaimer
+
 Please note that application is lacking in multiple areas: security, input validation, testing etc. I wanted to focus
 only on those topics related to storing application state.
 
