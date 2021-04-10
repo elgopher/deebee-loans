@@ -18,7 +18,19 @@ func ListenAndServe(ctx context.Context, loans Loans) error {
 	mux.Handle("/pay", payLoan{loans: loans})
 
 	server := &http.Server{Addr: ":8080", Handler: mux}
+	shutdownServerOnceDone(ctx, server)
 
+	logrus.Infof("Starting web server on %s", server.Addr)
+	return server.ListenAndServe()
+}
+
+type Loans interface {
+	TakeLoan(userID string, amount, term int) error
+	PayLoan(userID string, amount int) error
+	GetActiveLoan(userID string) (service.ActiveLoan, error)
+}
+
+func shutdownServerOnceDone(ctx context.Context, server *http.Server) {
 	go func() {
 		for {
 			select {
@@ -31,15 +43,6 @@ func ListenAndServe(ctx context.Context, loans Loans) error {
 			}
 		}
 	}()
-
-	logrus.Infof("Starting web server on %s", server.Addr)
-	return server.ListenAndServe()
-}
-
-type Loans interface {
-	TakeLoan(userID string, amount, term int) error
-	PayLoan(userID string, amount int) error
-	GetActiveLoan(userID string) (service.ActiveLoan, error)
 }
 
 func writeClientError(writer http.ResponseWriter, o ...interface{}) {
