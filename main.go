@@ -47,16 +47,16 @@ func main() {
 func openStore(ctx context.Context, mainDir, backupDir string) *replicatedJsonStore {
 	mainStore, err := store.Open(mainDir)
 	if err != nil {
-		logrus.WithError(err).Fatalf("error opening DeeBee store")
+		logrus.WithError(err).Fatal("error opening DeeBee store")
 	}
 	backupStore, err := store.Open(backupDir)
 	if err != nil {
-		logrus.WithError(err).Fatalf("error opening DeeBee backup store")
+		logrus.WithError(err).Error("error opening DeeBee backup store") // continue even though backupStore cannot be open
 	}
 
 	err = replicator.StartFromTo(ctx, mainStore, backupStore, replicator.Interval(time.Hour))
 	if err != nil {
-		logrus.WithError(err).Error("cannot start replication") // start app even though replication does not work
+		logrus.WithError(err).Error("cannot start replication") // continue even though replication does not work
 	}
 
 	return &replicatedJsonStore{
