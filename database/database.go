@@ -43,10 +43,12 @@ type Store interface {
 
 func loadState(s Store) (*SynchronizedLoans, error) {
 	snapshot := service.Snapshot{}
-	_, err := s.ReadLatest(&snapshot)
+	version, err := s.ReadLatest(&snapshot)
 	if err != nil && !store.IsVersionNotFound(err) {
 		return nil, err
 	}
+
+	logrus.Infof("Snapshot loaded with version %+v", version)
 	loans := service.FromSnapshot(snapshot)
 
 	return &SynchronizedLoans{
