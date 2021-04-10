@@ -28,6 +28,8 @@ func main() {
 	mainDir := flag.String("mainDir", "/tmp/loans", "Directory where data will be stored")
 	backupDir := flag.String("backupDir", "/tmp/loans-backup", "Directory where data will be replicated once per hour")
 	flag.Parse()
+	logrus.Infof("Main data dir is %s", *mainDir)
+	logrus.Infof("Backup data dir is %s", *backupDir)
 
 	s := openStore(ctx, *mainDir, *backupDir)
 
