@@ -5,6 +5,7 @@ package loan
 
 import (
 	"errors"
+	"fmt"
 )
 
 type Loan struct {
@@ -17,7 +18,6 @@ func New(amount, term int) *Loan {
 	return &Loan{
 		amount: amount,
 		term:   term,
-		paid:   0,
 	}
 }
 
@@ -45,7 +45,7 @@ func (l *Loan) Snapshot() Snapshot {
 
 func (l *Loan) Pay(amount int) error {
 	if l.paid+amount > l.amount {
-		return errors.New("too much")
+		return fmt.Errorf("too much, maximum amount to pay is %d", l.AmountRemaining())
 	}
 	if amount < 0 {
 		return errors.New("negative amount")

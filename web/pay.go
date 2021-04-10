@@ -36,5 +36,5 @@ func (h payLoan) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
 		logrus.WithError(err).Error("error getting active loan")
 		return
 	}
-	_, _ = fmt.Fprintln(writer, "Amount remaining", activeLoan.AmountRemaining)
+	_, _ = fmt.Fprintln(writer, "Amount remaining:", activeLoan.AmountRemaining)
 }
