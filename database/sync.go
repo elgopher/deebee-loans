@@ -13,7 +13,7 @@ import (
 // This approach is simple, but it might be inefficient for large states (more than 100MB of memory), because some methods
 // might block access to state for a significant amount of time (for example SynchronizedLoans.Snapshot may take seconds).
 type SynchronizedLoans struct {
-	mutex sync.Mutex
+	mutex sync.RWMutex
 	loans *service.Loans
 }
 
@@ -32,15 +32,15 @@ func (s *SynchronizedLoans) PayLoan(userID string, amount int) error {
 }
 
 func (s *SynchronizedLoans) GetActiveLoan(userID string) (service.ActiveLoan, error) {
-	s.mutex.Lock()
-	defer s.mutex.Unlock()
+	s.mutex.RLock()
+	defer s.mutex.RUnlock()
 
 	return s.loans.GetActiveLoan(userID)
 }
 
 func (s *SynchronizedLoans) Snapshot() service.Snapshot {
-	s.mutex.Lock()
-	defer s.mutex.Unlock()
+	s.mutex.RLock()
+	defer s.mutex.RUnlock()
 
 	return s.loans.Snapshot()
 }
