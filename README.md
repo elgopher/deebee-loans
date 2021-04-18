@@ -28,3 +28,9 @@ curl "http://localhost:8080/take?user=john&amount=1600&term=30"
 ```shell
 curl "http://localhost:8080/pay?user=john&amount=600"
 ``` 
+
+## Etcd for leader election
+
+```shell
+docker run -it --env ALLOW_NONE_AUTHENTICATION=yes -p 2379:2379 -p 2380:2380  bitnami/etcd:latest
+```

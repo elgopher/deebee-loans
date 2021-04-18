@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"github.com/jacekolszak/deebee-loans/database"
+	"github.com/jacekolszak/deebee-loans/etcd"
 	"github.com/jacekolszak/deebee-loans/service"
 	"github.com/jacekolszak/deebee-loans/web"
 	"github.com/jacekolszak/deebee/codec"
@@ -24,6 +25,14 @@ import (
 func main() {
 	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt, os.Kill)
 	defer cancel()
+
+	logrus.Info("Waiting to be elected as leader")
+	leader, err := etcd.WaitToBeElected(ctx)
+	if err != nil {
+		logrus.WithError(err).Panic()
+	}
+	defer leader.Resign()
+	logrus.Info("Became a leader")
 
 	mainDir := flag.String("mainDir", "/tmp/loans", "Directory where data will be stored")
 	backupDir := flag.String("backupDir", "/tmp/loans-backup", "Directory where data will be replicated once per hour")
