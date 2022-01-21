@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/sirupsen/logrus"
+	"github.com/jacekolszak/yala/logger"
 )
 
 type takeLoan struct {
@@ -19,6 +19,7 @@ func (h takeLoan) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
 		userID    = request.FormValue("user")
 		amount, _ = strconv.Atoi(request.FormValue("amount"))
 		term, _   = strconv.Atoi(request.FormValue("term"))
+		ctx       = request.Context()
 	)
 
 	err := h.loans.TakeLoan(userID, amount, term)
@@ -27,6 +28,6 @@ func (h takeLoan) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
 		return
 	}
 
-	logrus.Info("New loan taken")
+	logger.Info(ctx, "New loan taken")
 	writer.WriteHeader(201)
 }

@@ -9,11 +9,11 @@ import (
 
 	"github.com/jacekolszak/deebee-loans/service"
 	"github.com/jacekolszak/deebee/store"
-	"github.com/sirupsen/logrus"
+	"github.com/jacekolszak/yala/logger"
 )
 
 func StartLoans(ctx context.Context, s Store) (loans *SynchronizedLoans, done <-chan struct{}, err error) {
-	loans, err = loadState(s)
+	loans, err = loadState(ctx, s)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -26,9 +26,9 @@ func StartLoans(ctx context.Context, s Store) (loans *SynchronizedLoans, done <-
 		for {
 			select {
 			case <-time.After(time.Minute):
-				saveState(loans, s)
+				saveState(ctx, loans, s)
 			case <-ctx.Done():
-				saveState(loans, s)
+				saveState(ctx, loans, s)
 				return
 			}
 		}
@@ -41,15 +41,15 @@ type Store interface {
 	Write(in *service.Snapshot, options ...store.WriterOption) error
 }
 
-func loadState(s Store) (*SynchronizedLoans, error) {
+func loadState(ctx context.Context, s Store) (*SynchronizedLoans, error) {
 	snapshot := service.Snapshot{}
 	version, err := s.ReadLatest(&snapshot)
 	if store.IsVersionNotFound(err) {
-		logrus.WithError(err).Warn("No snapshot found")
+		logger.WithError(ctx, err).Warn("No snapshot found")
 	} else if err != nil {
 		return nil, err
 	} else {
-		logrus.Infof("Snapshot loaded with version %+v", version)
+		logger.With(ctx, "version", version).Info("Snapshot loaded")
 	}
 
 	loans := service.FromSnapshot(snapshot)
@@ -59,10 +59,10 @@ func loadState(s Store) (*SynchronizedLoans, error) {
 	}, nil
 }
 
-func saveState(loans *SynchronizedLoans, s Store) {
-	logrus.Info("Saving loans.Service state")
+func saveState(ctx context.Context, loans *SynchronizedLoans, s Store) {
+	logger.Info(ctx, "Saving loans.Service state")
 	snapshot := loans.Snapshot()
 	if err := s.Write(&snapshot); err != nil {
-		logrus.WithError(err).Error("error saving state")
+		logger.WithError(ctx, err).Error("error saving state")
 	}
 }
