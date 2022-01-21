@@ -8,7 +8,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/sirupsen/logrus"
+	"github.com/jacekolszak/yala/logger"
 )
 
 type payLoan struct {
@@ -19,6 +19,7 @@ func (h payLoan) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
 	var (
 		userID    = request.FormValue("user")
 		amount, _ = strconv.Atoi(request.FormValue("amount"))
+		ctx       = request.Context()
 	)
 
 	err := h.loans.PayLoan(userID, amount)
@@ -30,10 +31,10 @@ func (h payLoan) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
 	activeLoan, err := h.loans.GetActiveLoan(userID)
 	if err != nil {
 		writer.WriteHeader(500)
-		logrus.WithError(err).Error("error getting active loan")
+		logger.WithError(ctx, err).Error("error getting active loan")
 		return
 	}
 
-	logrus.Info("Loan paid off")
+	logger.Info(ctx, "Loan paid off")
 	_, _ = fmt.Fprintln(writer, "Amount remaining:", activeLoan.AmountRemaining)
 }
