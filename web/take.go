@@ -6,8 +6,6 @@ package web
 import (
 	"net/http"
 	"strconv"
-
-	"github.com/jacekolszak/yala/logger"
 )
 
 type takeLoan struct {
@@ -28,6 +26,6 @@ func (h takeLoan) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
 		return
 	}
 
-	logger.Info(ctx, "New loan taken")
+	Logger.Info(ctx, "New loan taken")
 	writer.WriteHeader(201)
 }
