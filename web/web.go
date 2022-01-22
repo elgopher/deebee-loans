@@ -9,7 +9,6 @@ import (
 	"net/http"
 
 	"github.com/jacekolszak/deebee-loans/service"
-	"github.com/jacekolszak/yala/logger"
 )
 
 func ListenAndServe(ctx context.Context, loans Loans) error {
@@ -20,7 +19,7 @@ func ListenAndServe(ctx context.Context, loans Loans) error {
 	server := &http.Server{Addr: ":8080", Handler: mux}
 	shutdownServerOnceDone(ctx, server)
 
-	logger.With(ctx, "address", server.Addr).Info("Starting web server")
+	Logger.With(ctx, "address", server.Addr).Info("Starting web server")
 	return server.ListenAndServe()
 }
 
@@ -35,9 +34,9 @@ func shutdownServerOnceDone(ctx context.Context, server *http.Server) {
 		for {
 			select {
 			case <-ctx.Done():
-				logger.Info(ctx, "Shutting down web server")
+				Logger.Info(ctx, "Shutting down web server")
 				if err := server.Shutdown(context.Background()); err != nil {
-					logger.WithError(ctx, err).Error("Problem shutting down the server")
+					Logger.WithError(ctx, err).Error("Problem shutting down the server")
 				}
 				return
 			}

@@ -12,6 +12,8 @@ import (
 	"github.com/jacekolszak/yala/logger"
 )
 
+var Logger logger.Global
+
 func StartLoans(ctx context.Context, s Store) (loans *SynchronizedLoans, done <-chan struct{}, err error) {
 	loans, err = loadState(ctx, s)
 	if err != nil {
@@ -45,11 +47,11 @@ func loadState(ctx context.Context, s Store) (*SynchronizedLoans, error) {
 	snapshot := service.Snapshot{}
 	version, err := s.ReadLatest(&snapshot)
 	if store.IsVersionNotFound(err) {
-		logger.WithError(ctx, err).Warn("No snapshot found")
+		Logger.WithError(ctx, err).Warn("No snapshot found")
 	} else if err != nil {
 		return nil, err
 	} else {
-		logger.With(ctx, "version", version).Info("Snapshot loaded")
+		Logger.With(ctx, "version", version).Info("Snapshot loaded")
 	}
 
 	loans := service.FromSnapshot(snapshot)
@@ -60,9 +62,9 @@ func loadState(ctx context.Context, s Store) (*SynchronizedLoans, error) {
 }
 
 func saveState(ctx context.Context, loans *SynchronizedLoans, s Store) {
-	logger.Info(ctx, "Saving loans.Service state")
+	Logger.Info(ctx, "Saving loans.Service state")
 	snapshot := loans.Snapshot()
 	if err := s.Write(&snapshot); err != nil {
-		logger.WithError(ctx, err).Error("error saving state")
+		Logger.WithError(ctx, err).Error("error saving state")
 	}
 }

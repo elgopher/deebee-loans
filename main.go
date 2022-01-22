@@ -22,8 +22,10 @@ import (
 	"github.com/jacekolszak/yala/logger"
 )
 
+var Logger logger.Global
+
 func main() {
-	logger.SetAdapter(printer.StdoutAdapter()) // configure logging
+	configureLogging()
 
 	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt, os.Kill)
 	defer cancel()
@@ -31,13 +33,13 @@ func main() {
 	mainDir := flag.String("mainDir", "/tmp/loans", "Directory where data will be stored")
 	backupDir := flag.String("backupDir", "/tmp/loans-backup", "Directory where data will be replicated once per hour")
 	flag.Parse()
-	logger.With(ctx, "main_data_dir", *mainDir).With("backup_data_dir", *backupDir).Info("Opening store")
+	Logger.With(ctx, "main_data_dir", *mainDir).With("backup_data_dir", *backupDir).Info("Opening store")
 
 	s := openStore(ctx, *mainDir, *backupDir)
 
 	loans, done, err := database.StartLoans(ctx, s)
 	if err != nil {
-		logger.WithError(ctx, err).Error("Starting loans failed")
+		Logger.WithError(ctx, err).Error("Starting loans failed")
 		os.Exit(1)
 	}
 	defer func() {
@@ -45,26 +47,26 @@ func main() {
 	}()
 
 	if err := web.ListenAndServe(ctx, loans); err != nil && err != http.ErrServerClosed {
-		logger.WithError(ctx, err).Error("Error starting server")
+		Logger.WithError(ctx, err).Error("Error starting server")
 	}
 }
 
 func openStore(ctx context.Context, mainDir, backupDir string) *replicatedJsonStore {
 	mainStore, err := store.Open(mainDir)
 	if err != nil {
-		logger.WithError(ctx, err).Error("error opening DeeBee store")
+		Logger.WithError(ctx, err).Error("error opening DeeBee store")
 		os.Exit(1)
 	}
 	backupStore, err := store.Open(backupDir)
 	if err != nil {
-		logger.WithError(ctx, err).Error("error opening DeeBee backup store")
+		Logger.WithError(ctx, err).Error("error opening DeeBee backup store")
 		os.Exit(1)
 	}
 
 	go func() {
 		err = replicator.StartFromTo(ctx, mainStore, backupStore, replicator.Interval(time.Hour))
 		if err != nil {
-			logger.WithError(ctx, err).Error("cannot start replication") // continue even though replication does not work
+			Logger.WithError(ctx, err).Error("cannot start replication") // continue even though replication does not work
 		}
 	}()
 
@@ -85,4 +87,12 @@ func (a *replicatedJsonStore) ReadLatest(out *service.Snapshot) (store.Version, 
 
 func (a *replicatedJsonStore) Write(in *service.Snapshot, options ...store.WriterOption) error {
 	return codec.Write(a.mainStore, json.Encoder(in), options...)
+}
+
+func configureLogging() {
+	adapter := printer.StdoutAdapter()
+
+	Logger.SetAdapter(adapter)
+	database.Logger.SetAdapter(adapter)
+	web.Logger.SetAdapter(adapter)
 }

@@ -11,6 +11,8 @@ import (
 	"github.com/jacekolszak/yala/logger"
 )
 
+var Logger logger.Global
+
 type payLoan struct {
 	loans Loans
 }
@@ -31,10 +33,10 @@ func (h payLoan) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
 	activeLoan, err := h.loans.GetActiveLoan(userID)
 	if err != nil {
 		writer.WriteHeader(500)
-		logger.WithError(ctx, err).Error("error getting active loan")
+		Logger.WithError(ctx, err).Error("error getting active loan")
 		return
 	}
 
-	logger.Info(ctx, "Loan paid off")
+	Logger.Info(ctx, "Loan paid off")
 	_, _ = fmt.Fprintln(writer, "Amount remaining:", activeLoan.AmountRemaining)
 }
