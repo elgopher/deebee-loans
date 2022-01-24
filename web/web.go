@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/jacekolszak/deebee-loans/service"
+	"github.com/elgopher/deebee-loans/service"
 )
 
 func ListenAndServe(ctx context.Context, loans Loans) error {

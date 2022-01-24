@@ -6,7 +6,7 @@ package service
 import (
 	"fmt"
 
-	"github.com/jacekolszak/deebee-loans/loan"
+	"github.com/elgopher/deebee-loans/loan"
 )
 
 type Loans struct {

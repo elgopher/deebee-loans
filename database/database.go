@@ -7,7 +7,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/jacekolszak/deebee-loans/service"
+	"github.com/elgopher/deebee-loans/service"
 	"github.com/jacekolszak/deebee/store"
 	"github.com/jacekolszak/yala/logger"
 )

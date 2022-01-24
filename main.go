@@ -11,9 +11,9 @@ import (
 	"os/signal"
 	"time"
 
-	"github.com/jacekolszak/deebee-loans/database"
-	"github.com/jacekolszak/deebee-loans/service"
-	"github.com/jacekolszak/deebee-loans/web"
+	"github.com/elgopher/deebee-loans/database"
+	"github.com/elgopher/deebee-loans/service"
+	"github.com/elgopher/deebee-loans/web"
 	"github.com/jacekolszak/deebee/codec"
 	"github.com/jacekolszak/deebee/json"
 	"github.com/jacekolszak/deebee/replicator"
