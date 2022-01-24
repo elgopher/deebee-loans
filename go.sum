@@ -3,12 +3,14 @@ github.com/coreos/go-systemd/v22 v22.3.2/go.mod h1:Y58oyj3AT4RCenI/lSvhwexgC+NSV
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
+github.com/elgopher/deebee v0.6.0 h1:0OXrkwvjJ4LYgWEw3NDkm5Pb215flmRe7SWATEyqxew=
+github.com/elgopher/deebee v0.6.0/go.mod h1:pFAsgoEddQrCXwyf+HyVu7zx9hlA/bPjtcxE2Lcm3Jo=
+github.com/elgopher/yala v0.11.0 h1:tiYcrIauWhy3NN3EltKHSIdU/eMyEXEMmrxGIpJDuPw=
+github.com/elgopher/yala v0.11.0/go.mod h1:n1zcJ3WHhH6t3BmRQLkJ+OsAGAg14ib/WQKKnv4vVEw=
 github.com/go-stack/stack v1.8.1/go.mod h1:dcoOX6HbPZSZptuspn9bctJ+N/CnF5gGygcUP3XYfe4=
 github.com/godbus/dbus/v5 v5.0.4/go.mod h1:xhWf0FNVPg57R7Z0UbKHbJfkEywrmjJnf7w5xrFpKfA=
 github.com/golang/glog v1.0.0/go.mod h1:EWib/APOK0SL3dFbYqvxE3UYd8E6s1ouQ7iEp/0LWV4=
 github.com/inconshreveable/log15 v0.0.0-20201112154412-8562bdadbbac/go.mod h1:cOaXtrgN4ScfRrD9Bre7U1thNq5RtJ8ZoP4iXVGRj6o=
-github.com/jacekolszak/deebee v0.5.0 h1:yhaXU79EE8AKYBZXX0HG2Gfk6JQ/FvfFtnS2RZJe2tQ=
-github.com/jacekolszak/deebee v0.5.0/go.mod h1:QqXMs3gDNzXYDfdlwpL8rXNsOmTtVlxcQVWU+NT8JH0=
 github.com/jacekolszak/yala v0.9.0 h1:cgyPXRXrmpDsB5eR84JLdCqnt+USNk3TYd77XyhetPc=
 github.com/jacekolszak/yala v0.9.0/go.mod h1:qjJ0qAI/5E2ki6jDJ8cN/G11IdH52zBXyK0DsZgaS5A=
 github.com/kr/pretty v0.1.0/go.mod h1:dAy3ld7l9f0ibDNOQOHHMYYIIbhfbHSm3C4ZsoJORNo=
