@@ -1,4 +1,4 @@
-module github.com/jacekolszak/deebee-loans
+module github.com/elgopher/deebee-loans
 
 go 1.16
 

@@ -6,7 +6,7 @@ package database
 import (
 	"sync"
 
-	"github.com/jacekolszak/deebee-loans/service"
+	"github.com/elgopher/deebee-loans/service"
 )
 
 // SynchronizedLoans serialize service.Loans method calls, so the `service` package is free of low-level code such as synchronization.
