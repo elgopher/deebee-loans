@@ -18,8 +18,8 @@ import (
 	"github.com/elgopher/deebee/json"
 	"github.com/elgopher/deebee/replicator"
 	"github.com/elgopher/deebee/store"
-	"github.com/jacekolszak/yala/adapter/printer"
-	"github.com/jacekolszak/yala/logger"
+	"github.com/elgopher/yala/adapter/printer"
+	"github.com/elgopher/yala/logger"
 )
 
 var Logger logger.Global

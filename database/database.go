@@ -9,7 +9,7 @@ import (
 
 	"github.com/elgopher/deebee-loans/service"
 	"github.com/elgopher/deebee/store"
-	"github.com/jacekolszak/yala/logger"
+	"github.com/elgopher/yala/logger"
 )
 
 var Logger logger.Global
