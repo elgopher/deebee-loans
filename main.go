@@ -22,7 +22,7 @@ import (
 	"github.com/elgopher/yala/logger"
 )
 
-var Logger logger.Global
+var log logger.Global
 
 func main() {
 	configureLogging()
@@ -33,13 +33,13 @@ func main() {
 	mainDir := flag.String("mainDir", "/tmp/loans", "Directory where data will be stored")
 	backupDir := flag.String("backupDir", "/tmp/loans-backup", "Directory where data will be replicated once per hour")
 	flag.Parse()
-	Logger.With(ctx, "main_data_dir", *mainDir).With("backup_data_dir", *backupDir).Info("Opening store")
+	log.With(ctx, "main_data_dir", *mainDir).With("backup_data_dir", *backupDir).Info("Opening store")
 
 	s := openStore(ctx, *mainDir, *backupDir)
 
 	loans, done, err := database.StartLoans(ctx, s)
 	if err != nil {
-		Logger.WithError(ctx, err).Error("Starting loans failed")
+		log.WithError(ctx, err).Error("Starting loans failed")
 		os.Exit(1)
 	}
 	defer func() {
@@ -47,26 +47,26 @@ func main() {
 	}()
 
 	if err := web.ListenAndServe(ctx, loans); err != nil && err != http.ErrServerClosed {
-		Logger.WithError(ctx, err).Error("Error starting server")
+		log.WithError(ctx, err).Error("Error starting server")
 	}
 }
 
 func openStore(ctx context.Context, mainDir, backupDir string) *replicatedJsonStore {
 	mainStore, err := store.Open(mainDir)
 	if err != nil {
-		Logger.WithError(ctx, err).Error("error opening DeeBee store")
+		log.WithError(ctx, err).Error("error opening DeeBee store")
 		os.Exit(1)
 	}
 	backupStore, err := store.Open(backupDir)
 	if err != nil {
-		Logger.WithError(ctx, err).Error("error opening DeeBee backup store")
+		log.WithError(ctx, err).Error("error opening DeeBee backup store")
 		os.Exit(1)
 	}
 
 	go func() {
 		err = replicator.StartFromTo(ctx, mainStore, backupStore, replicator.Interval(time.Hour))
 		if err != nil {
-			Logger.WithError(ctx, err).Error("cannot start replication") // continue even though replication does not work
+			log.WithError(ctx, err).Error("cannot start replication") // continue even though replication does not work
 		}
 	}()
 
@@ -92,7 +92,7 @@ func (a *replicatedJsonStore) Write(in *service.Snapshot, options ...store.Write
 func configureLogging() {
 	adapter := console.StdoutAdapter()
 
-	Logger.SetAdapter(adapter)
-	database.Logger.SetAdapter(adapter)
-	web.Logger.SetAdapter(adapter)
+	log.SetAdapter(adapter)
+	database.SetLoggerAdapter(adapter)
+	web.SetLoggerAdapter(adapter)
 }

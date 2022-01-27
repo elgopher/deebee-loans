@@ -19,7 +19,7 @@ func ListenAndServe(ctx context.Context, loans Loans) error {
 	server := &http.Server{Addr: ":8080", Handler: mux}
 	shutdownServerOnceDone(ctx, server)
 
-	Logger.With(ctx, "address", server.Addr).Info("Starting web server")
+	log.With(ctx, "address", server.Addr).Info("Starting web server")
 	return server.ListenAndServe()
 }
 
@@ -34,9 +34,9 @@ func shutdownServerOnceDone(ctx context.Context, server *http.Server) {
 		for {
 			select {
 			case <-ctx.Done():
-				Logger.Info(ctx, "Shutting down web server")
+				log.Info(ctx, "Shutting down web server")
 				if err := server.Shutdown(context.Background()); err != nil {
-					Logger.WithError(ctx, err).Error("Problem shutting down the server")
+					log.WithError(ctx, err).Error("Problem shutting down the server")
 				}
 				return
 			}
