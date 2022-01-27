@@ -18,7 +18,7 @@ import (
 	"github.com/elgopher/deebee/json"
 	"github.com/elgopher/deebee/replicator"
 	"github.com/elgopher/deebee/store"
-	"github.com/elgopher/yala/adapter/printer"
+	"github.com/elgopher/yala/adapter/console"
 	"github.com/elgopher/yala/logger"
 )
 
@@ -90,7 +90,7 @@ func (a *replicatedJsonStore) Write(in *service.Snapshot, options ...store.Write
 }
 
 func configureLogging() {
-	adapter := printer.StdoutAdapter()
+	adapter := console.StdoutAdapter()
 
 	Logger.SetAdapter(adapter)
 	database.Logger.SetAdapter(adapter)
