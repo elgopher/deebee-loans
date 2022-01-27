@@ -26,6 +26,6 @@ func (h takeLoan) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
 		return
 	}
 
-	Logger.Info(ctx, "New loan taken")
+	log.Info(ctx, "New loan taken")
 	writer.WriteHeader(201)
 }

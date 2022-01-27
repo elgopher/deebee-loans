@@ -12,7 +12,11 @@ import (
 	"github.com/elgopher/yala/logger"
 )
 
-var Logger logger.Global
+var log logger.Global
+
+func SetLoggerAdapter(adapter logger.Adapter) {
+	log.SetAdapter(adapter)
+}
 
 func StartLoans(ctx context.Context, s Store) (loans *SynchronizedLoans, done <-chan struct{}, err error) {
 	loans, err = loadState(ctx, s)
@@ -47,11 +51,11 @@ func loadState(ctx context.Context, s Store) (*SynchronizedLoans, error) {
 	snapshot := service.Snapshot{}
 	version, err := s.ReadLatest(&snapshot)
 	if store.IsVersionNotFound(err) {
-		Logger.WithError(ctx, err).Warn("No snapshot found")
+		log.WithError(ctx, err).Warn("No snapshot found")
 	} else if err != nil {
 		return nil, err
 	} else {
-		Logger.With(ctx, "version", version).Info("Snapshot loaded")
+		log.With(ctx, "version", version).Info("Snapshot loaded")
 	}
 
 	loans := service.FromSnapshot(snapshot)
@@ -62,9 +66,9 @@ func loadState(ctx context.Context, s Store) (*SynchronizedLoans, error) {
 }
 
 func saveState(ctx context.Context, loans *SynchronizedLoans, s Store) {
-	Logger.Info(ctx, "Saving loans.Service state")
+	log.Info(ctx, "Saving loans.Service state")
 	snapshot := loans.Snapshot()
 	if err := s.Write(&snapshot); err != nil {
-		Logger.WithError(ctx, err).Error("error saving state")
+		log.WithError(ctx, err).Error("error saving state")
 	}
 }

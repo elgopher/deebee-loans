@@ -11,7 +11,11 @@ import (
 	"github.com/elgopher/yala/logger"
 )
 
-var Logger logger.Global
+var log logger.Global
+
+func SetLoggerAdapter(adapter logger.Adapter) {
+	log.SetAdapter(adapter)
+}
 
 type payLoan struct {
 	loans Loans
@@ -33,10 +37,10 @@ func (h payLoan) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
 	activeLoan, err := h.loans.GetActiveLoan(userID)
 	if err != nil {
 		writer.WriteHeader(500)
-		Logger.WithError(ctx, err).Error("error getting active loan")
+		log.WithError(ctx, err).Error("error getting active loan")
 		return
 	}
 
-	Logger.Info(ctx, "Loan paid off")
+	log.Info(ctx, "Loan paid off")
 	_, _ = fmt.Fprintln(writer, "Amount remaining:", activeLoan.AmountRemaining)
 }
