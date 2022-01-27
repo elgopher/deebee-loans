@@ -9,14 +9,7 @@ import (
 
 	"github.com/elgopher/deebee-loans/service"
 	"github.com/elgopher/deebee/store"
-	"github.com/elgopher/yala/logger"
 )
-
-var log logger.Global
-
-func SetLoggerAdapter(adapter logger.Adapter) {
-	log.SetAdapter(adapter)
-}
 
 func StartLoans(ctx context.Context, s Store) (loans *SynchronizedLoans, done <-chan struct{}, err error) {
 	loans, err = loadState(ctx, s)
