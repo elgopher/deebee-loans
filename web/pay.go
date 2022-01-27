@@ -7,15 +7,7 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
-
-	"github.com/elgopher/yala/logger"
 )
-
-var log logger.Global
-
-func SetLoggerAdapter(adapter logger.Adapter) {
-	log.SetAdapter(adapter)
-}
 
 type payLoan struct {
 	loans Loans
